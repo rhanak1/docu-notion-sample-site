@@ -9,7 +9,7 @@ const config = {
   title: "docu-notion sample site",
   tagline: "",
   url: "https://sillsdev.github.io",
-  baseUrl: "/docu-notion-sample-site/",
+  baseUrl: "/Documentation-Root/",
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
