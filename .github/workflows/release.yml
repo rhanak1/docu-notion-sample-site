@@ -51,7 +51,7 @@ jobs:
         #env:
           # Any env vars your PDF tool needs
         run: |
-          yarn docu-pdf http://localhost:5000
+          npx docu-pdf http://localhost:5000
 
       # Optional: Upload the PDF artifact
       - name: Upload PDF artifact
