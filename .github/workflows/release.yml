@@ -47,9 +47,7 @@ jobs:
 
       # NEW: Generate PDF
       - name: Generate PDF from site
-        env:
-          PUPPETEER_ARGS: '--no-sandbox'
-        run: npx docu-pdf http://localhost:5000
+        run: npx docu-pdf http://localhost:5000 --no-sandbox
 
       # Optional: Upload the PDF artifact
       - name: Upload PDF artifact
