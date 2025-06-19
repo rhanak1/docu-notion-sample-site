@@ -1,7 +1,7 @@
 ---
 title: Building Apps Index
 sidebar_position: 0
-slug: /building-apps
+slug: /
 ---
 
 
@@ -9,13 +9,13 @@ slug: /building-apps
 # Building Apps {#21480858a4b68179b576ece500864f1e}
 
 
-![](/notion_imgs/building-apps.21480858-a4b6-81e5-b6d6-e3f1b2defc57.png)
+![](/notion_imgs/.21480858-a4b6-81e5-b6d6-e3f1b2defc57.png)
 
 
 **Building Apps**
 
 
-![](/notion_imgs/building-apps.21480858-a4b6-8195-b963-e8950d3afa92.png)
+![](/notion_imgs/.21480858-a4b6-8195-b963-e8950d3afa92.png)
 
 
 
