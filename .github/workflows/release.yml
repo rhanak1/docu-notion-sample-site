@@ -40,3 +40,22 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+      # NEW: Start a local web server for the PDF tool to crawl
+      - name: Start local server
+        run: |
+          npx serve -s build -l 5000 & sleep 5 
+        #Give server time to start
+
+      # NEW: Generate PDF
+      - name: Generate PDF from site
+        #env:
+          # Any env vars your PDF tool needs
+        run: |
+          yarn docu-pdf http://localhost:5000
+
+      # Optional: Upload the PDF artifact
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-pdf
+          path: ./site.pdf
