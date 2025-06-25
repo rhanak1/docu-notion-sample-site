@@ -40,14 +40,9 @@ jobs:
         run: |
           serve -s build -l 3000 &
           sleep 5
-      - name: Install your forked docu-pdf
-        run: yarn add github:rhanak1/docu-pdf#test
-      - name: Build docu-pdf
-        run: |
-          cd node_modules/docu-pdf
-          yarn install
-          yarn build
       - name: Generate PDF with docu-pdf
+        env: 
+          DOCU_PDF_LAUNCH_ARGS: '--no-sandbox --disable-setuid-sandbox'
         run: npx docu-pdf http://localhost:3000
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
