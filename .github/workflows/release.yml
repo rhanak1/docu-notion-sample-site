@@ -48,7 +48,7 @@ jobs:
         run: cd docu-pdf && yarn install
 
       - name: Generate PDF with your forked docu-pdf
-        run: npx ts-node src/cli.ts http://localhost:3000 --outline
+        run: npx ts-node docu-pdf/src/cli.ts http://localhost:3000 --outline
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
