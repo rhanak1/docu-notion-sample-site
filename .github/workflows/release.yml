@@ -40,10 +40,16 @@ jobs:
         run: |
           serve -s build -l 3000 &
           sleep 5
-      - name: Generate PDF with docu-pdf
-        env: 
-          DOCU_PDF_LAUNCH_ARGS: '--no-sandbox --disable-setuid-sandbox'
-        run: npx docu-pdf http://localhost:3000
+          
+      - name: Clone your forked docu-pdf
+        run: git clone -b test --single-branch https://github.com/rhanak1/docu-pdf.git
+
+      - name: Install dependencies for docu-pdf
+        run: cd docu-pdf && yarn install
+
+      - name: Generate PDF with your forked docu-pdf
+        run: npx ts-node src/cli.ts http://localhost:3000 --outline
+
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
