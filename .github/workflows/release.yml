@@ -35,7 +35,8 @@ jobs:
           commit_message: Apply changes from docu-notion
       - name: Build github pages branch
         run: yarn build
-        
+      - name: Install serve
+        run: yarn global add serve
       - name: Start local server
         run: |
           serve -s build -l 3000 &
