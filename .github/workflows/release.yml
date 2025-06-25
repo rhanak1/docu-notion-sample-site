@@ -35,23 +35,20 @@ jobs:
           commit_message: Apply changes from docu-notion
       - name: Build github pages branch
         run: yarn build
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+        
+      - name: Start local server
+        run: |
+          serve -s build -l 3000 &
+          sleep 5
+      - name: Generate PDF with docu-pdf
+        run: npx docu-pdf http://localhost:3000
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-      # NEW: Start a local web server for the PDF tool to crawl
-     # - name: Start local server
-      #  run: npx serve -s build -l 5000 & sleep 5 
-        #Give server time to start
-
-      # NEW: Generate PDF
-      #- name: Generate PDF from site
-       # run: npx docu-pdf http://localhost:5000 --no-sandbox
-
-      # Optional: Upload the PDF artifact
-      #- name: Upload PDF artifact
-       # uses: actions/upload-artifact@v4
-        #with:
-         # name: site-pdf
-          #path: ./site.pdf
+          name: documentation-pdf
+          path: ./site.pdf
+      #- name: Deploy to gh-pages
+      #  uses: peaceiris/actions-gh-pages@v3
+      #  with:
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      #    publish_dir: ./build
