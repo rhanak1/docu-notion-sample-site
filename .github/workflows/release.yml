@@ -48,6 +48,9 @@ jobs:
         run: |
           serve -s build -l 3000 &
           sleep 5
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000
           
       - name: Generate PDF with your forked docu-pdf
         run: npx ts-node docu-pdf/src/cli.ts http://localhost:3000
