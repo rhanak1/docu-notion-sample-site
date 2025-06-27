@@ -38,11 +38,14 @@ jobs:
       - name: Install serve
         run: yarn global add serve
           
-      - name: Clone your forked docu-pdf
-        run: git clone -b test --single-branch https://github.com/rhanak1/docu-pdf.git
-
-      - name: Install dependencies for docu-pdf
-        run: cd docu-pdf && yarn install
+      - name: Disable AppArmor
+        # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
+        # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
+        # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
+        # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
+        # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+        shell: bash
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
@@ -51,7 +54,7 @@ jobs:
           publish_dir: ./build
           
       - name: Generate PDF with your forked docu-pdf
-        run: npx ts-node docu-pdf/src/cli.ts https://rhanak1.github.io/docu-notion-sample-site/
+        run: npx docu-pdf https://rhanak1.github.io/docu-notion-sample-site/
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
