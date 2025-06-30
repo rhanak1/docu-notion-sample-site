@@ -63,7 +63,7 @@ jobs:
         shell: bash
         
       - name: Generate PDF
-        run: npx docu-pdf http://localhost:3000/docu-notion-sample-site/
+        run: npx docu-pdf http://localhost:3000/
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
