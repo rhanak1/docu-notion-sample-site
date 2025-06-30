@@ -51,7 +51,7 @@ jobs:
         
       - name: Start static server
         run: |
-          http-server ./build -p 3000 -c-1 --proxy http://localhost:3000?
+          http-server ./build -p 3000 -c-1 --proxy http://localhost:3000? &
       
       - name: Disable AppArmor
         # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
