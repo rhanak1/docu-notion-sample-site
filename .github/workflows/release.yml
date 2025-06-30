@@ -49,7 +49,7 @@ jobs:
         run: npm install -g http-server
 
       - name: Start static server
-        run: http-server ./build -p 3000 -s &
+        run: npx http-server build -p 3000 -s &
 
       - name: Test page accessibility
         run: |
