@@ -36,8 +36,9 @@ jobs:
       
       - name: Build github pages branch
         run: yarn build
-      - name: Install serve
-        run: yarn global add serve
+        
+      #- name: Install serve
+      #  run: yarn global add serve
 
       #- name: Deploy to gh-pages
       #  uses: peaceiris/actions-gh-pages@v3
@@ -48,27 +49,14 @@ jobs:
      # - name: Install http-server
      #   run: npm install -g http-server
 
-      - name: Start static server
-        run: npx serve build -l 3000 --single &
+      - name: Install dependencies
+        run: npm install express
 
-      - name: Wait for server to be up
-        run: |
-            until curl -s http://localhost:3000 > /dev/null; do
-            echo "Waiting for server..."
-            sleep 1
-            done
-
-      - name: Test page accessibility
-        run: |
-            curl -i http://localhost:3000/docs/docu-notion-sample-site/
-            curl -i http://localhost:3000/docs/docu-notion-sample-site/windows-installation
-            curl -i http://localhost:3000/docs/docu-notion-sample-site/docu-notion-sample-site/installing-scripture-app-builder
-            curl -i http://localhost:3000/docs/docu-notion-sample-site/installing-jdk
-            curl -i http://localhost:3000/docs/docu-notion-sample-site/install-jdk-wizard
-            curl -i http://localhost:3000/docs/docu-notion-sample-site/installing-jdk-from-Azul  
-      - name: Disable AppArmor
+      - name: Start Express server
+        run: node serve.js &
       
-            # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
+      - name: Disable AppArmor
+        # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
         # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
         # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
         # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
