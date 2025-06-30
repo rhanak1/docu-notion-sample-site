@@ -54,12 +54,12 @@ jobs:
       - name: Start static server
         run: http-server ./build -p 3000 &
 
-      - name: Wait for server to be up
-        run: |
-            until curl -s http://localhost:3000 > /dev/null; do
-            echo "Waiting for server..."
-            sleep 1
-            done
+      #- name: Wait for server to be up
+       # run: |
+        #    until curl -s http://localhost:3000 > /dev/null; do
+         #   echo "Waiting for server..."
+          #  sleep 1
+           # done
             
       - name: Disable AppArmor
         # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
