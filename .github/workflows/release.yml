@@ -49,7 +49,7 @@ jobs:
      #   run: npm install -g http-server
 
       - name: Start static server
-        run: npx serve build -l 3000 --single &
+        run: npx serve build -l 3000 &
 
       - name: Wait for server to be up
         run: |
