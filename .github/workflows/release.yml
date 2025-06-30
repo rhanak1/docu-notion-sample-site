@@ -36,8 +36,8 @@ jobs:
       
       - name: Build github pages branch
         run: yarn build
-      #- name: Install serve
-      #  run: yarn global add serve
+      - name: Install serve
+        run: yarn global add serve
 
       #- name: Deploy to gh-pages
       #  uses: peaceiris/actions-gh-pages@v3
@@ -49,7 +49,7 @@ jobs:
      #   run: npm install -g http-server
 
       - name: Start static server
-        run: npx http-server build -p 3000 -s &
+        run: npx serve build -l 3000 --single &
 
       - name: Wait for server to be up
         run: |
