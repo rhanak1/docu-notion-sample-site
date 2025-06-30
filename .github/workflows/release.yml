@@ -45,30 +45,30 @@ jobs:
       #    github_token: ${{ secrets.GITHUB_TOKEN }}
       #    publish_dir: ./build
 
-      - name: Install http-server
-        run: npm install -g http-server
+     # - name: Install http-server
+     #   run: npm install -g http-server
 
       - name: Start static server
         run: npx http-server build -p 3000 -s &
 
+      - name: Wait for server to be up
+        run: |
+            until curl -s http://localhost:3000 > /dev/null; do
+            echo "Waiting for server..."
+            sleep 1
+            done
+
       - name: Test page accessibility
         run: |
-          curl -I http://localhost:3000/docs/docu-notion-sample-site/
-          curl -I http://localhost:3000/docs/docu-notion-sample-site/windows-installation
-          curl -I http://localhost:3000/docs/docu-notion-sample-site/docu-notion-sample-site/installing-scripture-app-builder
-          curl -I http://localhost:3000/docs/docu-notion-sample-site/installing-jdk
-          curl -I http://localhost:3000/docs/docu-notion-sample-site/install-jdk-wizard
-          curl -I http://localhost:3000/docs/docu-notion-sample-site/installing-jdk-from-Azul
-      
-      #- name: Wait for server to be up
-       # run: |
-        #    until curl -s http://localhost:3000 > /dev/null; do
-         #   echo "Waiting for server..."
-          #  sleep 1
-           # done
-            
+            curl -I http://localhost:3000/docs/docu-notion-sample-site/
+            curl -I http://localhost:3000/docs/docu-notion-sample-site/windows-installation
+            curl -I http://localhost:3000/docs/docu-notion-sample-site/docu-notion-sample-site/installing-scripture-app-builder
+            curl -I http://localhost:3000/docs/docu-notion-sample-site/installing-jdk
+            curl -I http://localhost:3000/docs/docu-notion-sample-site/install-jdk-wizard
+            curl -I http://localhost:3000/docs/docu-notion-sample-site/installing-jdk-from-Azul  
       - name: Disable AppArmor
-        # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
+      
+            # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
         # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
         # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
         # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
