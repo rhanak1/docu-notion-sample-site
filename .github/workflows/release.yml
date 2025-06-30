@@ -48,12 +48,18 @@ jobs:
       - name: Install http-server
         run: npm install -g http-server
 
-      - name: Build Docusaurus site
-        run: npm run build
-
       - name: Start static server
         run: http-server ./build -p 3000 &
 
+      - name: Test page accessibility
+        run: |
+          curl -I http://localhost:3000/docs/docu-notion-sample-site/
+          curl -I http://localhost:3000/docs/docu-notion-sample-site/windows-installation
+          curl -I http://localhost:3000/docs/docu-notion-sample-site/docu-notion-sample-site/installing-scripture-app-builder
+          curl -I http://localhost:3000/docs/docu-notion-sample-site/installing-jdk
+          curl -I http://localhost:3000/docs/docu-notion-sample-site/install-jdk-wizard
+          curl -I http://localhost:3000/docs/docu-notion-sample-site/installing-jdk-from-Azul
+      
       #- name: Wait for server to be up
        # run: |
         #    until curl -s http://localhost:3000 > /dev/null; do
