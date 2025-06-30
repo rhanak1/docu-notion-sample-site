@@ -34,8 +34,8 @@ jobs:
         with:
           commit_message: Apply changes from docu-notion
       
-      #- name: Build github pages branch
-      #  run: yarn build
+      - name: Build github pages branch
+        run: yarn build
       #- name: Install serve
       #  run: yarn global add serve
 
