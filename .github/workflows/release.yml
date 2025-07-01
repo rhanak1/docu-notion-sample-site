@@ -47,23 +47,22 @@ jobs:
       #    publish_dir: ./build
 
       - name: Install http-server
-        run: npm install -g http-server
-        
-      - name: Start static server
-        run: |
-          http-server ./build -p 3000 -c-1 --proxy http://localhost:3000? &
-      
+        run: npm install -g http-server wait-on
+
       - name: Disable AppArmor
-        # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
-        # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
-        # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
-        # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
-        # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+      # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
+      # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
+      # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
+      # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
+      # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
         shell: bash
-        
-      - name: Generate PDF
-        run: npx docu-pdf http://localhost:3000/docu-notion-sample-site/
+      
+      - name: Start static server
+        run: |
+          http-server build/ -p 3000 --silent &
+          wait-on http://localhost:3000
+          npx docu-pdf http://localhost:3000
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
