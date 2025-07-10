@@ -32,11 +32,6 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Read outlines mapping
-        id: mapping
-        run: |
-          echo "MAPPING=$(cat outlines.json)" >> $GITHUB_ENV
-
       - name: Set outlines variable
         id: outlines
         run: |
