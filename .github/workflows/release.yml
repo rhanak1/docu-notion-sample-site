@@ -5,6 +5,10 @@ on:
       - main
   workflow_dispatch:
     inputs:
+      outlines:
+        description: 'Comma-separated list of outlines to generate PDFs for (leave blank for all)'
+        required: false
+        default: ''
       logLevel:
         description: "Log level"
         required: false
@@ -14,58 +18,90 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+    
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          
       - name: Install dependencies
         run: yarn
-      - name: Pull from Notion
-        env:
-          DOCU_NOTION_INTEGRATION_TOKEN: ${{ secrets.DOCU_NOTION_INTEGRATION_TOKEN }}
-          DOCU_NOTION_SAMPLE_ROOT_PAGE: ${{ secrets.DOCU_NOTION_SAMPLE_ROOT_PAGE }}
-        run: yarn pull
-      - name: Commit
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Apply changes from docu-notion
-      
-      - name: Build Docusaurus Site
-        run: yarn build
+
+      - name: Read outlines mapping
+        id: mapping
+        run: |
+          echo "MAPPING=$(cat outlines.json)" >> $GITHUB_ENV
+
+      - name: Set outlines variable
+        id: outlines
+        run: |
+          if [ -z "${{ github.event.inputs.outlines }}" ]; then                
+            echo "outlines=Keyboard-App-Builder,Scripture-App-Builder" >> $GITHUB_OUTPUT
+          else
+            echo "outlines=${{ github.event.inputs.outlines }}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Generate PDFs
+        run: |
+          OUTLINE_MAPPING=$(cat outlines.json)
+          IFS=',' read -ra OUTLINE_ARRAY <<< "${{ steps.outlines.outputs.outlines }}"
+          for outline in "${OUTLINE_ARRAY[@]}"; do
+            outline_trimmed=$(echo "$outline" | xargs)                        #Extract root page ID using jq
+            root_page_id=$(echo "$OUTLINE_MAPPING" | jq -r --arg key "$outline_trimmed" '.[$key]')
+            if [ "$root_page_id" = "null" ] || [ -z "$root_page_id" ]; then
+              echo "No root page ID found for $outline_trimmed, skipping."
+              continue
+            fi
+            echo "Generating PDF for $outline_trimmed (root page: $root_page_id)"
+            export DOCU_NOTION_SAMPLE_ROOT_PAGE=$root_page_id
+            yarn pull
+            yarn build
+            npm install -g http-server wait-on
+            echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+            http-server build/ -p 3000 --silent &
+            wait-on http://localhost:3000
+            npx docu-pdf http://localhost:3000 --outputPath $outline_trimmed.pdf
+            gh run upload-artifact --name $outline_trimmed --path $outline_trimmed.pdf
+          done
         
-      #- name: Install serve
-      #  run: yarn global add serve
+      #- name: Pull from Notion
+        #env:
+          #DOCU_NOTION_INTEGRATION_TOKEN: ${{ secrets.DOCU_NOTION_INTEGRATION_TOKEN }}
+          #DOCU_NOTION_SAMPLE_ROOT_PAGE: ${{ secrets.DOCU_NOTION_SAMPLE_ROOT_PAGE }}
+        #run: yarn pull
+      #- name: Commit
+        #uses: stefanzweifel/git-auto-commit-action@v4
+        #with:
+          #commit_message: Apply changes from docu-notion
+      
+      #- name: Build Docusaurus Site
+        #run: yarn build
 
-      #- name: Deploy to gh-pages
-      #  uses: peaceiris/actions-gh-pages@v3
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    publish_dir: ./build
+      #- name: Install http-server
+        #run: npm install -g http-server wait-on
 
-      - name: Install http-server
-        run: npm install -g http-server wait-on
-
-      - name: Disable AppArmor
+      #- name: Disable AppArmor
       # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
       # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
       # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
       # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
       # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
-        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
-        shell: bash
+        #run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+        #shell: bash
       
-      - name: Start static server
-        run: |
-          http-server build/ -p 3000 --silent &
-          wait-on http://localhost:3000
-          npx docu-pdf http://localhost:3000
+      #- name: Start static server
+        #run: |
+          #http-server build/ -p 3000 --silent &
+          #wait-on http://localhost:3000
+          #npx docu-pdf http://localhost:3000
 
-      - name: Upload PDF artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: documentation-pdf
-          path: ./site.pdf
+      #- name: Upload PDF artifact
+        #uses: actions/upload-artifact@v4
+        #with:
+          #name: documentation-pdf
+          #path: ./site.pdf
