@@ -63,9 +63,14 @@ jobs:
             http-server build/ -p 3000 --silent &
             wait-on http://localhost:3000
             npx docu-pdf http://localhost:3000 --outputPath $outline_trimmed.pdf
-            gh run upload-artifact --name $outline_trimmed --path $outline_trimmed.pdf
           done
-        
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-pdfs
+          path: site-*.pdf
+      
       #- name: Pull from Notion
         #env:
           #DOCU_NOTION_INTEGRATION_TOKEN: ${{ secrets.DOCU_NOTION_INTEGRATION_TOKEN }}
