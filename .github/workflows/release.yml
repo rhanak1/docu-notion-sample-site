@@ -54,7 +54,7 @@ jobs:
             fi
             echo "Generating PDF for $outline_trimmed (root page: $root_page_id)"
             export DOCU_NOTION_SAMPLE_ROOT_PAGE=$root_page_id
-            echo "$DOCU_NOTION_SAMPLE_ROOT_PAGE"
+            echo "$DOCU_NOTION_INTEGRATION_TOKEN"
             yarn pull
             yarn build
             npm install -g http-server wait-on
