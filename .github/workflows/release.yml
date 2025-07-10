@@ -45,7 +45,7 @@ jobs:
         run: |
           OUTLINE_MAPPING=$(cat outlines.json)
           IFS=',' read -ra OUTLINE_ARRAY <<< "${{ steps.outlines.outputs.outlines }}"
-          export DOCU_NOTION_INTEGRATION_TOKEN=secrets.DOCU_NOTION_INTEGRATION_TOKEN
+          export DOCU_NOTION_INTEGRATION_TOKEN=$secrets.DOCU_NOTION_INTEGRATION_TOKEN
           for outline in "${OUTLINE_ARRAY[@]}"; do
             outline_trimmed=$(echo "$outline" | xargs)                        #Extract root page ID using jq
             root_page_id=$(echo "$OUTLINE_MAPPING" | jq -r --arg key "$outline_trimmed" '.[$key]')
