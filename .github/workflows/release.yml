@@ -36,7 +36,7 @@ jobs:
         id: outlines
         run: |
           if [ -z "${{ github.event.inputs.outlines }}" ]; then                
-            echo "outlines=SAB-Installation Instructions,RAB-Installation Instructions,DAB-Installation Instructions,KAB-Installation Instructions" >> $GITHUB_OUTPUT
+            echo "outlines=SAB-Installation-Instructions,RAB-Installation-Instructions,DAB-Installation-Instructions,KAB-Installation-Instructions" >> $GITHUB_OUTPUT
           else
             echo "outlines=${{ github.event.inputs.outlines }}" >> $GITHUB_OUTPUT
           fi
