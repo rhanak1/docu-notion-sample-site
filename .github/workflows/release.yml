@@ -32,6 +32,18 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Sync Crowdin files
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: true
+          crowdin_branch_name: main
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          CROWDIN_PROJECT_ID: "812428"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set outlines variable
         id: outlines
         run: |
