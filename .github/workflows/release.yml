@@ -77,6 +77,11 @@ jobs:
             npx docu-pdf http://localhost:3000 --outputPath $outline_trimmed.pdf
           done
 
+      - name: Commit New Source Material
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: GHAction - Commit content changes pulled from notion
+          
       - name: Upload PDFs
         uses: actions/upload-artifact@v4
         with:
