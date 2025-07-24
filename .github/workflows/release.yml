@@ -32,22 +32,17 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Commit New Source Material
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: GHAction - Commit content changes pulled from notion
-          
-      - name: Sync Crowdin files
-        uses: crowdin/github-action@v1
-        with:
-          upload_sources: true
-          upload_translations: false
-          download_translations: true
-          crowdin_branch_name: main
-        env:
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-          CROWDIN_PROJECT_ID: "812428"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Sync Crowdin files
+       # uses: crowdin/github-action@v1
+        #with:
+         # upload_sources: true
+          #upload_translations: false
+          #download_translations: true
+          #crowdin_branch_name: main
+        #env:
+        #  CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+         # CROWDIN_PROJECT_ID: "812428"
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set outlines variable
         id: outlines
@@ -81,6 +76,11 @@ jobs:
             wait-on http://localhost:3000
             npx docu-pdf http://localhost:3000 --outputPath $outline_trimmed.pdf
           done
+
+      - name: Commit New Source Material
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: GHAction - Commit content changes pulled from notion
           
       - name: Upload PDFs
         uses: actions/upload-artifact@v4
