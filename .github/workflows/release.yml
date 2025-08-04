@@ -94,6 +94,7 @@ jobs:
             mkdir -p ../pdfs/$group_prefix/$rest_of_name
             #Clean docs dir and move .md files to build Docusaurus site
             rm -rf ../docs && mkdir ../docs
+            echo $(ls)
             cp -r ../crowdin_sources/$outline_trimmed/* ../docs/
             yarn build
             npm install -g http-server wait-on
