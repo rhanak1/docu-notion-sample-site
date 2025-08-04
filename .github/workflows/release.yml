@@ -101,7 +101,7 @@ jobs:
             echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
             http-server build/ -p 3000 --silent &
             wait-on http://localhost:3000
-            npx ts-node docu-pdf/src/cli.ts http://localhost:3000 --outline --outputPath $outline_trimmed.pdf
+            npx ts-node docu-pdf/src/cli.ts http://localhost:3000 --tocLevel="3" --outline --outputPath $outline_trimmed.pdf
             mv $outline_trimmed.pdf pdfs/$group_prefix/$rest_of_name/
 
             #Repeat for any other desired languages, .md should be in /i18n directory
