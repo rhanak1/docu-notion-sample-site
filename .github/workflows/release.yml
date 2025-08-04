@@ -78,7 +78,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Clone my docu-pdf
-        run: git clone -b test --single-branch https://github.com/rhanak1/docu-pdf.git
+        run: git clone -b feature/outline --single-branch https://github.com/rhanak1/docu-pdf.git
 
       - name: Install dependencies
         run: cd docu-pdf && yarn install
